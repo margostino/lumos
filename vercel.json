@@ -5,7 +5,8 @@
   "functions": {
     "api/lumos.go": {
       "memory": 1024,
-      "maxDuration": 5
+      "maxDuration": 5,
+      "includeFiles": "_files/**"
     }
   }
 }

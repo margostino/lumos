@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 )
 
 type Response struct {
@@ -25,8 +26,27 @@ func Reply(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
 
+	pwd, err := os.Getwd()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	filename := pwd + "/_files/sweden.json"
+	fmt.Println("DATA PATH:  " + filename)
+
+	jsonFile, err := os.Open(filename)
+	if err != nil {
+		log.Println(err)
+	}
+	byteValue, err := ioutil.ReadAll(jsonFile)
+	if err != nil {
+		log.Println(err)
+	}
+	var fileData interface{}
+	json.Unmarshal(byteValue, &fileData)
+
 	text := "🪄   Happiness can be found, even in the darkest of times, if one only remembers to turn on the light.\n" +
-		"🌎   We do not need magic to transform our world."
+		"🌎   We do not need magic to transform our world.\nfilename"
 	data := Response{Msg: text,
 		Method: "sendMessage",
 		ChatID: update.Message.Chat.ID}
