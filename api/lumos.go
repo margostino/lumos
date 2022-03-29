@@ -46,7 +46,7 @@ func Reply(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal(byteValue, &fileData)
 
 	text := "🪄   Happiness can be found, even in the darkest of times, if one only remembers to turn on the light.\n" +
-		"🌎   We do not need magic to transform our world.\nfilename"
+		"🌎   We do not need magic to transform our world.\n" + filename
 	data := Response{Msg: text,
 		Method: "sendMessage",
 		ChatID: update.Message.Chat.ID}
