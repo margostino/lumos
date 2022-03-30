@@ -18,7 +18,23 @@ type Response struct {
 
 func Reply(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
-	dataPath := os.Getenv("DATA_PATH")
+	dataBaseUrl := os.Getenv("DATA_PATH")
+	dataUrl := dataBaseUrl + "/sweden.json"
+
+	response, err := http.Get(dataUrl)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	jsonResponse, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	textResponse := string(jsonResponse)
+	log.Printf(textResponse)
+	//var fileData map[string]interface{}
+	//json.Unmarshal(byteValue, &fileData)
+
 	body, _ := ioutil.ReadAll(r.Body)
 	var update tgbotapi.Update
 	if err := json.Unmarshal(body, &update); err != nil {
@@ -27,20 +43,8 @@ func Reply(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
 
-	filename := dataPath + "/sweden.json"
-	jsonFile, err := os.Open(filename)
-	if err != nil {
-		log.Println(err)
-	}
-	byteValue, err := ioutil.ReadAll(jsonFile)
-	if err != nil {
-		log.Println(err)
-	}
-	var fileData map[string]interface{}
-	json.Unmarshal(byteValue, &fileData)
-
 	text := "🪄   Happiness can be found, even in the darkest of times, if one only remembers to turn on the light.\n" +
-		"🌎   We do not need magic to transform our world.\n" + "Data: " + fmt.Sprintf("%f", fileData["co2_emissions"])
+		"🌎   We do not need magic to transform our world.\n" + "Data: " + textResponse
 	data := Response{Msg: text,
 		Method: "sendMessage",
 		ChatID: update.Message.Chat.ID}
