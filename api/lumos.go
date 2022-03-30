@@ -4,10 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
+	"github.com/margostino/lumos/datasource"
+	"github.com/margostino/lumos/helpers"
+	"github.com/margostino/lumos/loader"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
+	"strings"
 )
 
 type Response struct {
@@ -16,25 +19,12 @@ type Response struct {
 	Method string `json:"method"`
 }
 
+var countryMapping = loader.Load()
+
 func Reply(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
-	dataBaseUrl := os.Getenv("DATA_PATH")
-	dataUrl := dataBaseUrl + "/sweden.json"
-
-	response, err := http.Get(dataUrl)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	jsonResponse, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	textResponse := string(jsonResponse)
-	log.Printf(textResponse)
-	//var fileData map[string]interface{}
-	//json.Unmarshal(byteValue, &fileData)
-
+	//countryMapping := loader.Load()
+	w.Header().Add("Content-Type", "application/json")
 	body, _ := ioutil.ReadAll(r.Body)
 	var update tgbotapi.Update
 	if err := json.Unmarshal(body, &update); err != nil {
@@ -43,15 +33,25 @@ func Reply(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
 
-	text := "🪄   Happiness can be found, even in the darkest of times, if one only remembers to turn on the light.\n" +
-		"🌎   We do not need magic to transform our world.\n" + "Data: " + textResponse
-	data := Response{Msg: text,
+	reply := lookupReply(update)
+
+	data := Response{
+		Msg:    reply,
 		Method: "sendMessage",
-		ChatID: update.Message.Chat.ID}
+		ChatID: update.Message.Chat.ID,
+	}
 
-	msg, _ := json.Marshal(data)
-	log.Printf("Response %s", string(msg))
-	w.Header().Add("Content-Type", "application/json")
-	fmt.Fprintf(w, string(msg))
+	message, _ := json.Marshal(data)
+	log.Printf("Response %s", string(message))
+	fmt.Fprintf(w, string(message))
 
+}
+
+func lookupReply(update tgbotapi.Update) string {
+	input := strings.ToLower(update.Message.Text)
+
+	if input != "sweden" { // strategy logic tbd
+		return helpers.Greeting()
+	}
+	return datasource.GetData(countryMapping["sweden"])
 }

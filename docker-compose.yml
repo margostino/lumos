@@ -1,0 +1,12 @@
+version: '3.7'
+
+services:
+
+  wiremock:
+    image: wiremock/wiremock:2.32.0
+    container_name: lumos_wiremock
+    ports:
+      - "10003:10003"
+    command: "--verbose --port 10003"
+    volumes:
+      - ./wiremock:/home/wiremock

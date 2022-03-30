@@ -8,5 +8,6 @@ import (
 
 func main() {
 	http.HandleFunc("/", handler.Reply)
+	log.Println("Starting Lumos Server in :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

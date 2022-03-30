@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/lumos/data/country-mapping.json"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "country-mapping-response.json",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
