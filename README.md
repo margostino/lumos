@@ -56,6 +56,9 @@ As it goes Lumos will have more shape and every iteration will be more visible a
 - [ ] Rethink data model with: source, indicator description, indicator metadata...tbd...
 - [ ] Data collector process to update info automatically
 - [ ] Improve loader performance. Evaluate data growth.
+- [ ] Personalized indicators/formulas
+- [ ] Personalized filtering
+- [ ] Command specific replies
 - [ ] ...**TODO**...
 
 ## Architecture
