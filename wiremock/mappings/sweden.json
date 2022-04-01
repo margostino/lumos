@@ -1,11 +1,11 @@
 {
   "request": {
     "method": "GET",
-    "urlPathPattern": "/lumos/data/country-mapping.json"
+    "urlPathPattern": "/lumos/data/sweden.json"
   },
   "response": {
     "status": 200,
-    "bodyFileName": "country-mapping.json",
+    "bodyFileName": "sweden.json",
     "headers": {
       "Content-Type": "application/json"
     }

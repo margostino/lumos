@@ -1,0 +1,14 @@
+{
+  "co2_emissions": {
+    "source": "Our World in Data based on the Global Carbon Project",
+    "description": "Carbon dioxide emissions are the primary driver of global climate change. It’s widely recognised that to avoid the worst impacts of climate change, the world needs to urgently reduce emissions. But, how this responsibility is shared between regions, countries, and individuals has been an endless point of contention in international discussions."
+  },
+  "renewable_energy_generation": {
+    "source": "Statistical Review of World Energy",
+    "description": "To reduce CO2 emissions and local air pollution, the world needs to rapidly shift towards low-carbon sources of energy – nuclear and renewable technologies. Renewable energy will play a key role in the decarbonization of our energy systems in the coming decades."
+  },
+  "gross_domestic_product": {
+    "source": "National accounts data - World Bank / OECD",
+    "description": "Gross domestic product (GDP) is the standard measure of the value added created through the production of goods and services in a country during a certain period. As such, it also measures the income earned from that production, or the total amount spent on final goods and services (less imports)"
+  }
+}
