@@ -40,10 +40,7 @@ func prepareGoalsReply(input string, data map[string]interface{}) string {
 		return fmt.Sprintf("🎯   %s\n", data["description"].(string))
 	}
 
-	var reply string
 	goals := data["goals"].(map[string]interface{})
-	for _, goal := range goals {
-		reply += fmt.Sprintf("🌱   %s\n", goal)
-	}
+	reply := fmt.Sprintf("🌱   %s\n", goals[input])
 	return reply
 }
