@@ -8,8 +8,8 @@ import (
 func LookupReply(update tgbotapi.Update) string {
 	input := normalize(update.Message.Text)
 	for _, replier := range Repliers {
-		if replier.Apply(input) {
-			return replier.Reply()
+		if match, reply := replier(input); match {
+			return reply
 		}
 	}
 	return "invalid command"
