@@ -60,6 +60,7 @@ As it goes Lumos will have more shape and every iteration will be more visible a
 - [ ] Personalized indicators/formulas
 - [ ] Personalized filtering
 - [ ] Command specific replies
+- [ ] Release notification
 - [ ] ...**TODO**...
 
 ## Architecture
