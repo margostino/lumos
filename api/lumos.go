@@ -26,6 +26,7 @@ func Reply(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
+	log.Printf("Chat: %d", update.Message.Chat.ID)
 
 	reply := processor.LookupReply(update)
 
