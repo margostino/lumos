@@ -52,6 +52,7 @@ As it goes Lumos will have more shape and every iteration will be more visible a
 
 - [x] Only country Sweden some base indicators
 - [x] Fixed input: **sweden** otherwise fallback quote
+- [ ] Sustainable Development Goals Tracker
 - [ ] Input pattern matching for multiple countries
 - [ ] Rethink data model with: source, indicator description, indicator metadata...tbd...
 - [ ] Data collector process to update info automatically
