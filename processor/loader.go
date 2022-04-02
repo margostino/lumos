@@ -34,9 +34,10 @@ func loadIndex() map[string]string {
 }
 
 func LoadRepliers() []Replier {
-	loadedRepliers := make([]Replier, 0)
-	loadedRepliers = append(loadedRepliers, CountryReply)
-	loadedRepliers = append(loadedRepliers, IndicatorReply)
-	loadedRepliers = append(loadedRepliers, FallbackReply) // always fallback last in slice
-	return loadedRepliers
+	return []Replier{
+		CountryReply,
+		IndicatorReply,
+		GoalsReply,
+		FallbackReply, // always fallback last in slice
+	}
 }

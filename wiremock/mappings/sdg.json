@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/lumos/data/sdg.json"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "sdg.json",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

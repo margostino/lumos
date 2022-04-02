@@ -15,11 +15,15 @@ func CountryReply(input string) (bool, string) {
 
 func prepareCountryReply(data map[string]interface{}) string {
 	var reply string
+	population := data["population"]
+	reply += fmt.Sprintf("🇸🇪 Population:   %.0f\n", population)
 	for topic, indicators := range data {
-		reply += fmt.Sprintf("📌   %s\n", topic)
-		values := indicators.(map[string]interface{})
-		for key, value := range values {
-			reply += fmt.Sprintf("  ►   %s: %v\n", key, value)
+		if topic != "population" {
+			reply += fmt.Sprintf("📌   %s\n", topic)
+			values := indicators.(map[string]interface{})
+			for key, value := range values {
+				reply += fmt.Sprintf("  ►   %s: %v\n", key, value)
+			}
 		}
 	}
 	return reply

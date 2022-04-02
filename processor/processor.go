@@ -16,7 +16,8 @@ func LookupReply(update tgbotapi.Update) string {
 }
 
 func normalize(text string) string {
-	input := strings.ToLower(text)
+	input := strings.ReplaceAll(text, "/", "")
+	input = strings.ToLower(input)
 	input = strings.TrimSpace(input)
 	return input
 }

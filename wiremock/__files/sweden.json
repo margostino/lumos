@@ -1,11 +1,11 @@
 {
+  "population": 10099270,
   "co2_emissions": {
     "source": "Our World in Data based on the Global Carbon Project",
     "year": 2020,
     "co2": 38.635,
     "co2_per_capita": 3.826,
-    "share_global_co2": 0.11,
-    "population": 10099270
+    "share_global_co2": 0.11
   },
   "renewable_energy_generation": {
     "source": "Statistical Review of World Energy",
