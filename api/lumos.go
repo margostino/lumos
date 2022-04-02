@@ -16,8 +16,6 @@ type Response struct {
 	Method string `json:"method"`
 }
 
-//var countryMapping = loader.Load()
-
 func Reply(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	w.Header().Add("Content-Type", "application/json")

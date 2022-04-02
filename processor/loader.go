@@ -1,4 +1,4 @@
-package loader
+package processor
 
 import (
 	"encoding/json"
@@ -9,7 +9,10 @@ import (
 	"os"
 )
 
-func Load() map[string]string {
+var CountryMapping = loadIndex()
+var Repliers = LoadRepliers()
+
+func loadIndex() map[string]string {
 	var countryMapping map[string]string
 	baseUrl := os.Getenv("APP_DATA_BASE_URL")
 	filename := "country-mapping.json"
@@ -28,4 +31,17 @@ func Load() map[string]string {
 	json.Unmarshal(jsonResponse, &countryMapping)
 
 	return countryMapping
+}
+
+func LoadRepliers() []Replier {
+	loadedRepliers := make([]Replier, 0)
+	countryReplier := CountryReplier{
+		Id: "sweden",
+	}
+	fallbackReplier := FallbackReplier{
+		Id: "fallback",
+	}
+	loadedRepliers = append(loadedRepliers, countryReplier)
+	loadedRepliers = append(loadedRepliers, fallbackReplier)
+	return loadedRepliers
 }
