@@ -1,11 +1,8 @@
-name: push
+name: push notification
 on:
   push:
     branches:
       - master
-
-env:
-  COMMIT_MESSAGE: ${{ github.event.commits[0].message }}
 
 jobs:
   push_notification:
@@ -17,4 +14,4 @@ jobs:
           to: ${{ secrets.CHAT_ID }}
           token: ${{ secrets.BOT_TOKEN }}
           message: |
-            🛠 New Commit: $COMMIT_MESSAGE
+            🛠 New Commit: ${{ github.event.commits[0].message }}

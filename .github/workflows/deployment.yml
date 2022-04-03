@@ -1,9 +1,10 @@
 name: deployment notification
 on: [deployment_status]
+
 jobs:
-  deploy_status:
+  successful_deploy:
+    if: ${{ github.event.deployment_status.state == 'success' }}
     name: successful_deploy
-    if: github.event.deployment_status.state == "success"
     runs-on: ubuntu-latest
     steps:
       - name: send telegram message when deploy is successfully done
@@ -11,4 +12,15 @@ jobs:
         with:
           to: ${{ secrets.CHAT_ID }}
           token: ${{ secrets.BOT_TOKEN }}
-          message: 🛠 New Deployment DONE successfully!
+          message: 🟢 New Deployment DONE successfully!
+  unsuccessful_deploy:
+    if: ${{ github.event.deployment_status.state == 'failure' || github.event.deployment_status.state == 'error'}}
+    name: unsuccessful_deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: send telegram message when deploy fails
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.CHAT_ID }}
+          token: ${{ secrets.BOT_TOKEN }}
+          message: 🔴 Deployment failed!
