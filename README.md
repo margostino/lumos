@@ -63,6 +63,7 @@ As it goes Lumos will have more shape and every iteration will be more visible a
 - [ ] Command specific replies
 - [ ] Release notification
 - [ ] News/Events
+- [ ] Change log
 - [ ] ...**TODO**...
 
 ## Architecture
