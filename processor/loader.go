@@ -38,6 +38,7 @@ func LoadRepliers() []Replier {
 		CountryReply,
 		IndicatorReply,
 		GoalsReply,
+		StartReply,
 		FallbackReply, // always fallback last in slice
 	}
 }
