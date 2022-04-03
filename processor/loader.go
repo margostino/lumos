@@ -9,6 +9,8 @@ import (
 	"os"
 )
 
+type Replier func(input string) (bool, string)
+
 var CountryMapping = loadIndex()
 var Repliers = LoadRepliers()
 
