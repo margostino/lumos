@@ -25,4 +25,4 @@ jobs:
           token: ${{ secrets.BOT_TOKEN }}
           message: |
             🔴 ${{ github.event.deployment_status.description }}!
-            ${{ github.event.deployment_status.log_url }}
+            📃 ${{ github.event.deployment_status.log_url }}
