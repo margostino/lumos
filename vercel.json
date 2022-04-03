@@ -3,7 +3,7 @@
     "silent": true
   },
   "functions": {
-    "api/lumos.go": {
+    "api/lumosxx.go": {
       "memory": 1024,
       "maxDuration": 5,
       "includeFiles": "_files/**"
