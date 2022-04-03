@@ -23,5 +23,5 @@ jobs:
         with:
           to: ${{ secrets.CHAT_ID }}
           token: ${{ secrets.BOT_TOKEN }}
-          message: 🔴 ${{ github.event.deployment_status.description }}!\n
+          message: 🔴 ${{ github.event.deployment_status.description }}!
             ${{ github.event.deployment_status.log_url }}
