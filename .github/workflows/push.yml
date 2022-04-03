@@ -1,0 +1,20 @@
+name: push
+on:
+  push:
+    branches:
+      - master
+
+env:
+  COMMIT_MESSAGE: ${{ github.event.commits[0].message }}
+
+jobs:
+  push_notification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: send telegram message on push
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.CHAT_ID }}
+          token: ${{ secrets.BOT_TOKEN }}
+          message: |
+            🛠 New Commit: $COMMIT_MESSAGE
