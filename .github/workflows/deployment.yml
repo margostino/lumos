@@ -23,4 +23,4 @@ jobs:
         with:
           to: ${{ secrets.CHAT_ID }}
           token: ${{ secrets.BOT_TOKEN }}
-          message: 🔴 Deployment failed!
+          message: 🔴 Deployment failed! ${{ github.event.deployment_status.description }}
