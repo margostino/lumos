@@ -12,7 +12,7 @@ jobs:
         with:
           to: ${{ secrets.CHAT_ID }}
           token: ${{ secrets.BOT_TOKEN }}
-          message: 🟢 New Deployment DONE successfully!
+          message: 🟢 ${{ github.event.deployment_status.description }}!
   unsuccessful_deploy:
     if: ${{ github.event.deployment_status.state == 'failure' || github.event.deployment_status.state == 'error'}}
     name: unsuccessful_deploy
@@ -23,5 +23,5 @@ jobs:
         with:
           to: ${{ secrets.CHAT_ID }}
           token: ${{ secrets.BOT_TOKEN }}
-          message: 🔴 ${{ github.event.deployment_status.description }}!
-            | ${{ github.event.deployment_status.log_url }}
+          message: 🔴 ${{ github.event.deployment_status.description }}!\n
+            ${{ github.event.deployment_status.log_url }}
