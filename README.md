@@ -1,7 +1,7 @@
 # Lumos ⚡️ ✨ 💫
 ### <em>"Light up your city, your country, your world."</em>
 
-Lumos Maxima, an earth data provider. Lumos is (initially) a Proof of Concept which implements a Telegram Bot interface to make the knowledge and data of every place in the World accesible for everyone. Lumos aims to raise awaresness about the world's largest problems.
+Lumos Maxima, an earth data provider. Lumos is (initially) a Proof of Concept which implements a Telegram Bot interface to make the knowledge and data of every place in the World accessible for everyone. Lumos aims to raise awaresness about the world's largest problems.
 
 ## Motivation
 
