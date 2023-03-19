@@ -2,12 +2,12 @@ package processor
 
 import (
 	"encoding/json"
-	"fmt"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
-	"github.com/margostino/lumos/processor"
+	"github.com/margostino/lumos/common"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 )
 
 type Response struct {
@@ -15,6 +15,8 @@ type Response struct {
 	ChatID int64  `json:"chat_id"`
 	Method string `json:"method"`
 }
+
+var bot, _ = newBot()
 
 func Reply(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
@@ -27,16 +29,33 @@ func Reply(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("[%s@%d] %s", update.Message.From.UserName, update.Message.Chat.ID, update.Message.Text)
 
-	reply := processor.LookupReply(update)
+	//reply := processor.LookupReply(update)
+	//
+	//data := Response{
+	//	Msg:    reply,
+	//	Method: "sendMessage",
+	//	ChatID: update.Message.Chat.ID,
+	//}
+	//
+	//message, _ := json.Marshal(data)
+	//log.Printf("Response %s", string(message))
+	//fmt.Fprintf(w, string(message))
 
-	data := Response{
-		Msg:    reply,
-		Method: "sendMessage",
-		ChatID: update.Message.Chat.ID,
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Hi")
+	//msg.ReplyToMessageID = update.Message.MessageID
+	btn := tgbotapi.KeyboardButton{
+		RequestLocation: true,
+		Text:            "Gimme where u live!!",
 	}
+	msg.ReplyMarkup = tgbotapi.NewReplyKeyboard([]tgbotapi.KeyboardButton{btn})
+	bot.Send(msg)
 
-	message, _ := json.Marshal(data)
-	log.Printf("Response %s", string(message))
-	fmt.Fprintf(w, string(message))
+}
 
+func newBot() (*tgbotapi.BotAPI, error) {
+	client, error := tgbotapi.NewBotAPI(os.Getenv("BOT_TOKEN"))
+	//bot.Debug = true
+	common.SilentCheck(error, "when creating a new BotAPI instance")
+	//log.Printf("Authorized on account %s\n", client.Self.UserName)
+	return client, error
 }
