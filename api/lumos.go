@@ -32,7 +32,7 @@ func Reply(w http.ResponseWriter, r *http.Request) {
 	if update.Message.Location != nil {
 		log.Printf("Latitude: %f - Latitude: %f\n", update.Message.Location.Latitude, update.Message.Location.Longitude)
 	}
-	
+
 	//reply := processor.LookupReply(update)
 	//
 	//data := Response{
@@ -45,11 +45,11 @@ func Reply(w http.ResponseWriter, r *http.Request) {
 	//log.Printf("Response %s", string(message))
 	//fmt.Fprintf(w, string(message))
 
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Hi")
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, "")
 	//msg.ReplyToMessageID = update.Message.MessageID
 	btn := tgbotapi.KeyboardButton{
 		RequestLocation: true,
-		Text:            "Gimme where u live!!",
+		Text:            "Send location",
 	}
 	msg.ReplyMarkup = tgbotapi.NewReplyKeyboard([]tgbotapi.KeyboardButton{btn})
 	bot.Send(msg)
