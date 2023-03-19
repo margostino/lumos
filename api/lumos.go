@@ -27,8 +27,8 @@ func Reply(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("Error updating →", err)
 	}
 
-	//log.Printf("[%s@%d] %s", update.Message.From.UserName, update.Message.Chat.ID, update.Message.Text)
-	log.Printf("%+v\n", update)
+	log.Printf("[%s@%d] %s", update.Message.From.UserName, update.Message.Chat.ID, update.Message.Text)
+	log.Printf("Latitude: %f - Latitude: %f\n", update.Message.Location.Latitude, update.Message.Location.Longitude)
 
 	//reply := processor.LookupReply(update)
 	//
