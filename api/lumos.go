@@ -2,6 +2,7 @@ package processor
 
 import (
 	"encoding/json"
+	"fmt"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/margostino/lumos/common"
 	"io/ioutil"
@@ -30,7 +31,27 @@ func Reply(w http.ResponseWriter, r *http.Request) {
 	log.Printf("[%s@%d] %s", update.Message.From.UserName, update.Message.Chat.ID, update.Message.Text)
 
 	if update.Message.Location != nil {
-		log.Printf("Latitude: %f - Latitude: %f\n", update.Message.Location.Latitude, update.Message.Location.Longitude)
+		geoData := fmt.Sprintf("Latitude: %f - Latitude: %f\n", update.Message.Location.Latitude, update.Message.Location.Longitude)
+		reply := geoData
+		log.Print(geoData)
+		data := Response{
+			Msg:    reply,
+			Method: "sendMessage",
+			ChatID: update.Message.Chat.ID,
+		}
+
+		message, _ := json.Marshal(data)
+		log.Printf("Response %s", string(message))
+		fmt.Fprintf(w, string(message))
+	} else {
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "")
+		//msg.ReplyToMessageID = update.Message.MessageID
+		btn := tgbotapi.KeyboardButton{
+			RequestLocation: true,
+			Text:            "Send location",
+		}
+		msg.ReplyMarkup = tgbotapi.NewReplyKeyboard([]tgbotapi.KeyboardButton{btn})
+		bot.Send(msg)
 	}
 
 	//reply := processor.LookupReply(update)
@@ -44,15 +65,6 @@ func Reply(w http.ResponseWriter, r *http.Request) {
 	//message, _ := json.Marshal(data)
 	//log.Printf("Response %s", string(message))
 	//fmt.Fprintf(w, string(message))
-
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, "")
-	//msg.ReplyToMessageID = update.Message.MessageID
-	btn := tgbotapi.KeyboardButton{
-		RequestLocation: true,
-		Text:            "Send location",
-	}
-	msg.ReplyMarkup = tgbotapi.NewReplyKeyboard([]tgbotapi.KeyboardButton{btn})
-	bot.Send(msg)
 
 }
 
