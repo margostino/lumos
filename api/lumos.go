@@ -44,7 +44,7 @@ func Reply(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Response %s", string(message))
 		fmt.Fprintf(w, string(message))
 	} else {
-		msg := tgbotapi.NewMessage(update.Message.Chat.ID, " ")
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Send location")
 		//msg.ReplyToMessageID = update.Message.MessageID
 		btn := tgbotapi.KeyboardButton{
 			RequestLocation: true,
