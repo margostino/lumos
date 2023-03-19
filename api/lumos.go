@@ -27,7 +27,8 @@ func Reply(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("Error updating →", err)
 	}
 
-	log.Printf("[%s@%d] %s", update.Message.From.UserName, update.Message.Chat.ID, update.Message.Text)
+	//log.Printf("[%s@%d] %s", update.Message.From.UserName, update.Message.Chat.ID, update.Message.Text)
+	log.Printf("%+v\n", update)
 
 	//reply := processor.LookupReply(update)
 	//
