@@ -35,9 +35,11 @@ func Reply(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("Error updating →", err)
 	}
 
-	log.Printf("[%s@%d] %s", update.Message.From.UserName, update.Message.Chat.ID, update.Message.Text)
+	input := update.Message.Text
 
-	if update.Message.Text == "/start" {
+	log.Printf("[%s@%d] %s", update.Message.From.UserName, update.Message.Chat.ID, input)
+
+	if input == "/start" {
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Welcome to Lumos!")
 		btn := tgbotapi.KeyboardButton{
 			RequestLocation: true,
@@ -53,10 +55,25 @@ func Reply(w http.ResponseWriter, r *http.Request) {
 			Longitude: longitude,
 		}
 
-		reply = fmt.Sprintf("Latitude: %f - Longitude: %f\nSend variable name and observation separated by semicolon (e.g. some_name;this is a sample) do you want to register?\n", latitude, longitude)
+		reply = fmt.Sprintf("📍  Latitude: %f\n"+
+			"📍  Longitude: %f\n"+
+			"🔎  Send variable name and observation separated by semicolon (e.g. some_name;this is a sample) do you want to register?\n",
+			latitude,
+			longitude)
 
 	} else if variable != nil {
-		reply = fmt.Sprintf("You sent variable name %s and observation %s", variable.Name, variable.Observation)
+		normalizedInputList := common.NewString(input).
+			ToLower().
+			Split(";").
+			Values()
+
+		if len(normalizedInputList) != 2 {
+			reply = "🚫  Invalid input"
+		} else {
+			variable.Name = normalizedInputList[0]
+			variable.Observation = normalizedInputList[0]
+			reply = fmt.Sprintf("You sent variable name %s and observation %s", variable.Name, variable.Observation)
+		}
 	}
 
 	data := Response{
