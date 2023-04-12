@@ -5,11 +5,12 @@ import (
 	"fmt"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/margostino/lumos/common"
-	"github.com/margostino/lumos/datasource"
+	"github.com/margostino/lumos/db"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
 type Response struct {
@@ -20,7 +21,7 @@ type Response struct {
 
 var bot, _ = newBot()
 
-var variable *datasource.Variable
+var variable *db.Variable
 
 func Reply(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
@@ -50,14 +51,14 @@ func Reply(w http.ResponseWriter, r *http.Request) {
 	} else if update.Message.Location != nil {
 		latitude := update.Message.Location.Latitude
 		longitude := update.Message.Location.Longitude
-		variable = &datasource.Variable{
+		variable = &db.Variable{
 			Latitude:  latitude,
 			Longitude: longitude,
 		}
 
 		reply = fmt.Sprintf("📍  Latitude: %f\n"+
 			"📍  Longitude: %f\n"+
-			"🔎  Send variable name and observation separated by semicolon (e.g. some_name;this is a sample) do you want to register?\n",
+			"🔎  Send variable name, value and observation separated by semicolon (e.g. some_name;1234;this is a sample) do you want to register?\n",
 			latitude,
 			longitude)
 
@@ -67,12 +68,20 @@ func Reply(w http.ResponseWriter, r *http.Request) {
 			Split(";").
 			Values()
 
-		if len(normalizedInputList) != 2 {
+		if len(normalizedInputList) != 3 {
 			reply = "🚫  Invalid input"
 		} else {
+			variable.Datetime = time.Now().UTC().String()
 			variable.Name = normalizedInputList[0]
-			variable.Observation = normalizedInputList[0]
-			reply = fmt.Sprintf("You sent variable name %s and observation %s", variable.Name, variable.Observation)
+			variable.Value = normalizedInputList[1]
+			variable.Observation = normalizedInputList[2]
+			err := db.Append(variable)
+
+			if err != nil {
+				reply = fmt.Sprintf("🛑  Unable to save data: %s", err.Error())
+			} else {
+				reply = "✅  Data recorded successfully"
+			}
 		}
 	}
 

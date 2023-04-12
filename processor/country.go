@@ -2,12 +2,12 @@ package processor
 
 import (
 	"fmt"
-	"github.com/margostino/lumos/datasource"
+	"github.com/margostino/lumos/db"
 )
 
 func CountryReply(input string) (bool, string) {
 	if input == "sweden" {
-		data := datasource.GetData("sweden")
+		data := db.GetData("sweden")
 		return true, prepareCountryReply(data)
 	}
 	return false, ""

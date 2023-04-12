@@ -2,7 +2,7 @@ package processor
 
 import (
 	"fmt"
-	"github.com/margostino/lumos/datasource"
+	"github.com/margostino/lumos/db"
 	"github.com/margostino/lumos/utils"
 )
 
@@ -29,7 +29,7 @@ var sdgCommands = []string{
 
 func GoalsReply(input string) (bool, string) {
 	if utils.Contains(sdgCommands, input) {
-		data := datasource.GetData("sdg")
+		data := db.GetData("sdg")
 		return true, prepareGoalsReply(input, data)
 	}
 	return false, ""
