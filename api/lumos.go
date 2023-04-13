@@ -70,8 +70,7 @@ func Reply(w http.ResponseWriter, r *http.Request) {
 
 		for _, variableName := range variableNames {
 			button := tgbotapi.KeyboardButton{
-				RequestLocation: true,
-				Text:            variableName,
+				Text: variableName,
 			}
 			buttons = append(buttons, button)
 		}
