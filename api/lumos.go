@@ -44,13 +44,7 @@ func Reply(w http.ResponseWriter, r *http.Request) {
 	log.Printf("[%s@%d] %s", update.Message.From.UserName, update.Message.Chat.ID, input)
 
 	if input == "/start" {
-		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Welcome to Lumos!")
-		btn := tgbotapi.KeyboardButton{
-			RequestLocation: true,
-			Text:            "Track location",
-		}
-		msg.ReplyMarkup = tgbotapi.NewReplyKeyboard([]tgbotapi.KeyboardButton{btn})
-		bot.Send(msg)
+		sendMessageWithTrackLocation(update.Message.Chat.ID, "Welcome to Lumos!")
 	} else if strings.HasPrefix(input, VarPrefix) {
 		variable.Datetime = time.Now().UTC().String()
 		variable.Name = strings.ReplaceAll(input, VarPrefix, "")
@@ -113,14 +107,17 @@ func Reply(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if isFull(variable) {
+			var message string
 			err := db.Append(variable)
 			variable = nil
 
 			if err != nil {
-				reply = fmt.Sprintf("🛑  Unable to save data: %s", err.Error())
+				message = fmt.Sprintf("🛑  Unable to save data: %s", err.Error())
 			} else {
-				reply = "✅  Data recorded successfully"
+				message = "✅  Data recorded successfully"
 			}
+
+			sendMessageWithTrackLocation(update.Message.Chat.ID, message)
 		}
 
 	}
@@ -159,4 +156,14 @@ func newBot() (*tgbotapi.BotAPI, error) {
 
 func isFull(variable *db.Variable) bool {
 	return variable.Name != "" && variable.Value != "" && variable.Datetime != "" && variable.Latitude > 0 && variable.Longitude > 0 && variable.Observation != ""
+}
+
+func sendMessageWithTrackLocation(chatId int64, message string) {
+	msg := tgbotapi.NewMessage(chatId, message)
+	btn := tgbotapi.KeyboardButton{
+		RequestLocation: true,
+		Text:            "Track location",
+	}
+	msg.ReplyMarkup = tgbotapi.NewReplyKeyboard([]tgbotapi.KeyboardButton{btn})
+	bot.Send(msg)
 }
