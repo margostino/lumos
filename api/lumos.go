@@ -100,20 +100,19 @@ func Reply(w http.ResponseWriter, r *http.Request) {
 			Split(";").
 			Values()
 
-		if len(normalizedInputList) != 3 && variable.Name == "" {
-			reply = "🚫  Invalid input"
-		} else if len(normalizedInputList) != 2 && variable.Name != "" {
-			reply = "🚫  Invalid input"
-		} else {
-			if variable.Datetime == "" {
-				variable.Datetime = time.Now().UTC().String()
-			}
-			if variable.Name == "" {
-				variable.Name = normalizedInputList[0]
-			}
-
+		if len(normalizedInputList) == 3 && variable.Name == "" {
+			variable.Datetime = time.Now().UTC().String()
+			variable.Name = normalizedInputList[0]
 			variable.Value = normalizedInputList[1]
 			variable.Observation = normalizedInputList[2]
+		} else if len(normalizedInputList) == 2 && variable.Name != "" {
+			variable.Value = normalizedInputList[0]
+			variable.Observation = normalizedInputList[1]
+		} else {
+			reply = "🚫  Invalid input"
+		}
+
+		if isFull(variable) {
 			err := db.Append(variable)
 			variable = nil
 
@@ -123,6 +122,7 @@ func Reply(w http.ResponseWriter, r *http.Request) {
 				reply = "✅  Data recorded successfully"
 			}
 		}
+
 	}
 
 	data := Response{
@@ -155,4 +155,8 @@ func newBot() (*tgbotapi.BotAPI, error) {
 	common.SilentCheck(error, "when creating a new BotAPI instance")
 	//log.Printf("Authorized on account %s\n", client.Self.UserName)
 	return client, error
+}
+
+func isFull(variable *db.Variable) bool {
+	return variable.Name != "" && variable.Value != "" && variable.Datetime != "" && variable.Latitude > 0 && variable.Longitude > 0 && variable.Observation != ""
 }
