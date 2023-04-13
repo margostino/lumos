@@ -10,8 +10,11 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
+
+const VarPrefix = "var_"
 
 type Response struct {
 	Msg    string `json:"text"`
@@ -48,6 +51,19 @@ func Reply(w http.ResponseWriter, r *http.Request) {
 		}
 		msg.ReplyMarkup = tgbotapi.NewReplyKeyboard([]tgbotapi.KeyboardButton{btn})
 		bot.Send(msg)
+	} else if strings.HasPrefix(input, VarPrefix) {
+		variable.Datetime = time.Now().UTC().String()
+		variable.Name = strings.ReplaceAll(input, VarPrefix, "")
+
+		reply = fmt.Sprintf("📍  Latitude: %f\n"+
+			"📍  Longitude: %f\n"+
+			"⚡️  Variable: %s\n"+
+			"🔎  Send the value and observation (optional).\n"+
+			"➡️  Format: {value};{observation}\n",
+			variable.Latitude,
+			variable.Longitude,
+			variable.Name)
+
 	} else if update.Message.Location != nil {
 		variableNames := db.GetVariableNames()
 
@@ -60,7 +76,7 @@ func Reply(w http.ResponseWriter, r *http.Request) {
 
 		message := fmt.Sprintf("📍  Latitude: %f\n"+
 			"📍  Longitude: %f\n"+
-			"🔎  Register: pick the variable or send a new one.\n"+
+			"🔎  Pick the variable or send a new one.\n"+
 			"➡️  Format (new): {variable_name};{value};{observation}\n",
 			latitude,
 			longitude)
@@ -70,7 +86,7 @@ func Reply(w http.ResponseWriter, r *http.Request) {
 
 		for _, variableName := range variableNames {
 			button := tgbotapi.KeyboardButton{
-				Text: variableName,
+				Text: fmt.Sprintf("%s%s", VarPrefix, variableName),
 			}
 			buttons = append(buttons, button)
 		}
@@ -84,14 +100,22 @@ func Reply(w http.ResponseWriter, r *http.Request) {
 			Split(";").
 			Values()
 
-		if len(normalizedInputList) != 3 {
+		if len(normalizedInputList) != 3 && variable.Name == "" {
+			reply = "🚫  Invalid input"
+		} else if len(normalizedInputList) != 2 && variable.Name != "" {
 			reply = "🚫  Invalid input"
 		} else {
-			variable.Datetime = time.Now().UTC().String()
-			variable.Name = normalizedInputList[0]
+			if variable.Datetime == "" {
+				variable.Datetime = time.Now().UTC().String()
+			}
+			if variable.Name == "" {
+				variable.Name = normalizedInputList[0]
+			}
+
 			variable.Value = normalizedInputList[1]
 			variable.Observation = normalizedInputList[2]
 			err := db.Append(variable)
+			variable = nil
 
 			if err != nil {
 				reply = fmt.Sprintf("🛑  Unable to save data: %s", err.Error())
