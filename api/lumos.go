@@ -49,6 +49,8 @@ func Reply(w http.ResponseWriter, r *http.Request) {
 		msg.ReplyMarkup = tgbotapi.NewReplyKeyboard([]tgbotapi.KeyboardButton{btn})
 		bot.Send(msg)
 	} else if update.Message.Location != nil {
+		variableNames := db.GetVariableNames()
+
 		latitude := update.Message.Location.Latitude
 		longitude := update.Message.Location.Longitude
 		variable = &db.Variable{
@@ -56,11 +58,26 @@ func Reply(w http.ResponseWriter, r *http.Request) {
 			Longitude: longitude,
 		}
 
-		reply = fmt.Sprintf("📍  Latitude: %f\n"+
+		message := fmt.Sprintf("📍  Latitude: %f\n"+
 			"📍  Longitude: %f\n"+
-			"🔎  Send variable name, value and observation separated by semicolon (e.g. some_name;1234;this is a sample) do you want to register?\n",
+			"🔎  Register: pick the variable or send a new one.\n"+
+			"➡️  Format (new): {variable_name};{value};{observation}\n",
 			latitude,
 			longitude)
+
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
+		buttons := make([]tgbotapi.KeyboardButton, 0)
+
+		for _, variableName := range variableNames {
+			button := tgbotapi.KeyboardButton{
+				RequestLocation: true,
+				Text:            variableName,
+			}
+			buttons = append(buttons, button)
+		}
+
+		msg.ReplyMarkup = tgbotapi.NewReplyKeyboard(buttons)
+		bot.Send(msg)
 
 	} else if variable != nil {
 		normalizedInputList := common.NewString(input).
